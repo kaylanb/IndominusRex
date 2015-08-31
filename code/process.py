@@ -259,45 +259,46 @@ def TEST_noise_features_for_series(dfile,i_beg,i_end):
         ax[window].plot(noise['2'][window,:,:])
 
 #MAIN
-datafiles= glob.glob('../train/subj1_series*_data.csv')
-#i_beg is index of first 1, i_end is index of last 1
-i_beg={}
-i_end={}
-(data_tbl,events_tbl)= get_filtered_data(datafiles[0]) #to get event names
-#indices of target events in each series of trials
-for i in range(9):
-    i_beg['series'+str(i)]={}
-    i_end['series'+str(i)]={}
-    for event in events_tbl.keys():
-        i_beg['series'+str(i)][event]=[]
-        i_end['series'+str(i)][event]=[]
-#feature vectors and event lables for each series of trials
-vector= {}
-for i in range(9):
-    vector['series'+str(i)]= {}        
-#fill i_beg,i_end
-for dfile in datafiles:
-    (data_tbl,events_tbl)= get_filtered_data(dfile)
-    for event in events_tbl.keys():
-        index_event_beg_end(i_beg,i_end,dfile[-16:-9],event, events_tbl[event]) 
-#get features and event labels
-for dfile in datafiles(:6):
-    print "loading file: %s" % (dfile)
-    ##### if delete line below, crashes extracting features from subj1series2
-    ##### could not figure out why
-    (data_tbl,events_tbl)= get_filtered_data(dfile)
-    #####
-    print 'extracting Target Features'
-    (t_events,t_feats)= target_features_for_series(dfile,i_beg)
-    print 'extracting Noise Features'
-    (n_events,n_feats)= noise_features_for_series(dfile,i_beg,i_end)
-    series= dfile[-16:-9]
-    vector[series]['feats']= n.concatenate( (t_feats,n_feats),axis=1)
-    vector[series]['events']= n.concatenate( (t_events,n_events),axis=1)
-#save feature vectors to pickle file
-tot_feats= n.concatenate((vector['series1']['feats'].copy(),                vector['series2']['feats'].copy(),vector['series3']['feats'].copy(),                vector['series4']['feats'].copy(),vector['series5']['feats'].copy(),                vector['series6']['feats'].copy()),axis=1)
-tot_events= n.concatenate((vector['series1']['events'].copy(),                vector['series2']['events'].copy(),vector['series3']['events'].copy(),                vector['series4']['events'].copy(),vector['series5']['events'].copy(),                vector['series6']['events'].copy()),axis=1)
-fname=datafiles[0][9:14]+"_features.pickle"
-f= open(fname,"w")
-pickle.dump((tot_feats,tot_events),f)
-f.close()
+for subj in range(4,13):
+	datafiles= glob.glob('../train/subj'+str(subj)+'_series*_data.csv')
+	#i_beg is index of first 1, i_end is index of last 1
+	i_beg={}
+	i_end={}
+	(data_tbl,events_tbl)= get_filtered_data(datafiles[0]) #to get event names
+	#indices of target events in each series of trials
+	for i in range(9):
+		i_beg['series'+str(i)]={}
+		i_end['series'+str(i)]={}
+		for event in events_tbl.keys():
+			i_beg['series'+str(i)][event]=[]
+			i_end['series'+str(i)][event]=[]
+	#feature vectors and event lables for each series of trials
+	vector= {}
+	for i in range(9):
+		vector['series'+str(i)]= {}        
+	#fill i_beg,i_end
+	for dfile in datafiles:
+		(data_tbl,events_tbl)= get_filtered_data(dfile)
+		for event in events_tbl.keys():
+			index_event_beg_end(i_beg,i_end,dfile[-16:-9],event, events_tbl[event]) 
+	#get features and event labels
+	for dfile in datafiles[:6]:
+		print "loading file: %s" % (dfile)
+		##### if delete line below, crashes extracting features from subj1series2
+		##### could not figure out why
+		(data_tbl,events_tbl)= get_filtered_data(dfile)
+		#####
+		print 'extracting Target Features'
+		(t_events,t_feats)= target_features_for_series(dfile,i_beg)
+		print 'extracting Noise Features'
+		(n_events,n_feats)= noise_features_for_series(dfile,i_beg,i_end)
+		series= dfile[-16:-9]
+		vector[series]['feats']= n.concatenate( (t_feats,n_feats),axis=1)
+		vector[series]['events']= n.concatenate( (t_events,n_events),axis=1)
+	#save feature vectors to pickle file
+	tot_feats= n.concatenate((vector['series1']['feats'].copy(),                vector['series2']['feats'].copy(),vector['series3']['feats'].copy(),                vector['series4']['feats'].copy(),vector['series5']['feats'].copy(),                vector['series6']['feats'].copy()),axis=1)
+	tot_events= n.concatenate((vector['series1']['events'].copy(),                vector['series2']['events'].copy(),vector['series3']['events'].copy(),                vector['series4']['events'].copy(),vector['series5']['events'].copy(),                vector['series6']['events'].copy()),axis=1)
+	fname=datafiles[0][9:14]+"_features.pickle"
+	f= open(fname,"w")
+	pickle.dump((tot_feats,tot_events),f)
+	f.close()
