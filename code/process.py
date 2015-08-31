@@ -235,7 +235,7 @@ def TEST_noise_features_for_series(dfile,i_beg,i_end):
 
 
 #MAIN
-for subj in range(1,13):
+for subj in range(1,11):
 	datafiles= glob.glob('../train/subj'+str(subj)+'_series*_data.csv')
 	#i_beg is index of first 1, i_end is index of last 1
 	i_beg={}
@@ -268,9 +268,17 @@ for subj in range(1,13):
 		vector[series]['feats']= n.concatenate( (t_feats,n_feats),axis=1)
 		vector[series]['events']= n.concatenate( (t_events,n_events),axis=1)
 	#save feature vectors to pickle file
-	tot_feats= n.concatenate((vector['series1']['feats'].copy(),            vector['series2']['feats'].copy(),vector['series3']['feats'].copy(),            vector['series4']['feats'].copy(),vector['series5']['feats'].copy(),            vector['series6']['feats'].copy()),axis=1)
-	tot_events= n.concatenate((vector['series1']['events'].copy(),            vector['series2']['events'].copy(),vector['series3']['events'].copy(),            vector['series4']['events'].copy(),vector['series5']['events'].copy(),            vector['series6']['events'].copy()),axis=1)
-	fname=datafiles[0][9:14]+"_training_features.pickle"
+	tot_feats= n.concatenate((vector['series1']['feats'].copy(),\
+			vector['series2']['feats'].copy(),vector['series3']['feats'].copy(),\
+			vector['series4']['feats'].copy(),vector['series5']['feats'].copy(),\
+			vector['series6']['feats'].copy(),vector['series7']['feats'].copy(),\
+			vector['series8']['feats'].copy()),axis=1)
+	tot_events= n.concatenate((vector['series1']['events'].copy(),\
+			vector['series2']['events'].copy(),vector['series3']['events'].copy(),\
+			vector['series4']['events'].copy(),vector['series5']['events'].copy(),\
+			vector['series6']['events'].copy(),vector['series7']['events'].copy(),\
+			vector['series8']['events'].copy()),axis=1)
+	fname=datafiles[0][9:-4]+"_training_features.pickle"
 	f= open(fname,"w")
 	pickle.dump((tot_feats,tot_events),f)
 	f.close()

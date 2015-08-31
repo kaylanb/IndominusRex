@@ -65,11 +65,13 @@ def real_time_features(dfile):
     return (vec_feat,ids)
 
 #MAIN
-datafiles= glob.glob('../test/*_data.csv')
-for dfile in datafiles:
+#datafiles= glob.glob('../test/*_data.csv')
+#for dfile in datafiles:
+for subj in range(1,13):
+	dfile='../train/subj'+str(subj)+'_series6_data.csv'
 	print 'loading %s' % dfile
 	(feat,ids)= real_time_features(dfile)
-	fname= dfile[:-4]+"_features.pickle"
+	fname= dfile[9:-4]+"_Test_series6_features.pickle"
 	f= open(fname,"w")
 	pickle.dump((feat,ids),f)
 	f.close()
